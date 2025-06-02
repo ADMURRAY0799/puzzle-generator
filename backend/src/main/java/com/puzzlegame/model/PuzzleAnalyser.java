@@ -10,13 +10,15 @@ import com.puzzlegame.model.Tile.TileType;
 //Class responsible for creating PuzzleStats
 public class PuzzleAnalyser{
 
-    public void analyse(Puzzle puzzle){
+    public PuzzleStats analyse(Puzzle puzzle){
         int gridSize = calculateGridSize(puzzle);
         int blockCount = calculateBlockCount(puzzle);
         int blockVariety =  calculateBlockVariety(puzzle);
         float mobilityScore = calculateMobilityScore(puzzle);
         int moveEstimate = estimateMinimalMoves(puzzle);
         int winConditionScore = analyseWinCondition(puzzle);
+
+        return new PuzzleStats(gridSize, blockCount, blockVariety, mobilityScore, moveEstimate, winConditionScore);
     }
 
     public Integer calculateGridSize(Puzzle puzzle){
@@ -75,15 +77,15 @@ public class PuzzleAnalyser{
                 }
             }
         }
-        int minDistance = 100000000;
+        int minDistance = Integer.MAX_VALUE;
         for(Position position : targetBlock.getOccupiedPositions()){
             for(Position goalPosition : goalPositions){
-                int distance = ABS(goalPosition.row - position.row) + ABS(goalPosition.col = position.col);
+                int distance = Math.abs(goalPosition.row - position.row) + Math.abs(goalPosition.col - position.col);
                 if(distance < minDistance){
                     minDistance = distance;
                 }
             }
-        }return minDistance;
+        }return minDistance; 
     }
 
 

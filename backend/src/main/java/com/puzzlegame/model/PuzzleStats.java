@@ -33,11 +33,11 @@ public class PuzzleStats{
         return mobilityScore;
     }
 
-    public int moveEstimate(){
+    public int getMoveEstimate(){
         return moveEstimate;
     }
 
-    public int winConditionScore(){
+    public int getWinConditionScore(){
         return winConditionScore;
     }
 }
