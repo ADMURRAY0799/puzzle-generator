@@ -18,6 +18,21 @@ public class Position {
         return col;
     }
 
+    public Position move(Direction direction){
+        switch (direction){
+            case UP:
+                return new Position(this.row -1, this.col);
+            case DOWN:
+                return new Position(this.row +1, this.col);
+            case LEFT:
+                return new Position(this.row, this.col - 1);
+            case RIGHT:
+                return new Position(this.row, this.col + 1);
+            default:
+                throw new IllegalArgumentException("Unknown direction: " + direction);
+        }
+    }
+
     public Position copy(){
         return new Position(row, col);
     }
