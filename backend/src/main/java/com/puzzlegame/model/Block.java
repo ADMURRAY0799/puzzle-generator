@@ -6,7 +6,7 @@ public class Block {
 
     private String id; 
     private Position position;
-    private int length; 
+    public int length; 
     private Direction direction;
     private boolean isTarget;
 

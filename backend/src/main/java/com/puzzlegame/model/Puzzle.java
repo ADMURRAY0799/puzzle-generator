@@ -2,10 +2,10 @@ package com.puzzlegame.model;
 import java.util.List;
 
 public class Puzzle{
-    private final Tile[][] grid;
-    private List<Block> blockList;
-    private int rows;
-    private int cols;
+    protected final Tile[][] grid;
+    public List<Block> blockList;
+    public int rows;
+    public int cols;
     
     public Puzzle(int rows, int cols, List<Block> blockList){
         this.rows = rows;
