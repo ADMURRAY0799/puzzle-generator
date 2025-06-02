@@ -1,15 +1,25 @@
 package com.puzzlegame.model;
 
 public enum Direction{
-    HORIZONTAL, VERTICAL; 
+    UP, DOWN, LEFT, RIGHT; 
 
-    public boolean isHorizontal(){
-        return this == HORIZONTAL;  
+    public boolean isUp(){
+        return this == UP;
+    }
+
+    public boolean isDown(){
+        return this == DOWN;
+    }
+
+    public boolean isLeft(){
+        return this == LEFT;  
     }
     
-    public boolean isVertical(){
-        return this == VERTICAL;
+    public boolean isRight(){
+        return this == RIGHT;
     }
+
+    
 }
 
 

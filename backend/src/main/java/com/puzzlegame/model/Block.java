@@ -19,9 +19,9 @@ public class Block {
     }
 
     public List<Position> getOccupiedPositions(){
-        if(direction == Direction.HORIZONTAL && length == 2){
+        if(direction == Direction.LEFT && length == 2 || direction == Direction.RIGHT && length == 2){
             return List.of(position, new Position(position.row, position.col + 1));
-        }else if (direction == Direction.VERTICAL && length == 2){
+        }else if (direction == Direction.UP && length == 2 || direction == Direction.DOWN && length == 2){
                 return List.of(position, new Position(position.row + 1, position.col));
             }
             else return (List<Position>) position;
@@ -39,10 +39,18 @@ public class Block {
     public List<Position> getOffsetPositions(int rowDelta, int colDelta){
         Position newStart = new Position(position.row + rowDelta, position.col + colDelta);
         if(length == 2){
-            if(direction == Direction.HORIZONTAL){
+            if(direction == Direction.LEFT){
                 Position second = new Position(newStart.row, newStart.col + 1);
                 return List.of(newStart, second);
-            } else {
+            }
+            if(direction == Direction.RIGHT){
+                Position second = new Position(newStart.row, newStart.col - 1);
+                return List.of(newStart, second);
+            }   
+            if(direction == Direction.UP){
+                Position second = new Position(newStart.row - 1, newStart.col);
+                return List.of(newStart, second);
+            }else {
                 Position second = new Position(newStart.row + 1, newStart.col);
                 return List.of(newStart, second);
             }
@@ -51,9 +59,9 @@ public class Block {
 
     // Actually perform the move by delta in allowed direction
     public void move(int delta){
-        if(direction == Direction.HORIZONTAL){
+        if(direction == Direction.LEFT || direction == Direction.RIGHT){
             position.col+= delta;
-        }else if(direction == Direction.VERTICAL){
+        }else if(direction == Direction.UP || direction == direction.DOWN){
             position.row+= delta;
         }
     }
@@ -62,7 +70,7 @@ public class Block {
     public boolean canMove(int delta, Tile[][] grid){
         int rowDelta = 0;
         int colDelta = 0;
-        if(direction == Direction.HORIZONTAL){
+        if(direction == Direction.LEFT || direction == Direction.RIGHT){
              colDelta = delta;
         }else{
              colDelta = 0;
