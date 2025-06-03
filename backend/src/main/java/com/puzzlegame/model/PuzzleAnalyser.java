@@ -117,4 +117,7 @@ public class PuzzleAnalyser{
             }
         }return freeTiles;
     }
+
+
+    
 }

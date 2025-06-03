@@ -24,8 +24,25 @@ public class DifficultyScorer{
     }
 
     public DifficultyLevel score(PuzzleStats puzzleStats){
-        return null;
+        double gridScore = normaliseGridSize(puzzleStats.getGridSize()) * weightGridSize;
+        double blockScore = normaliseBlockCount(puzzleStats.getBlockCount()) * weightBlockCount;
+        double varietyScore = normaliseBlockVariety(puzzleStats.getBlockVariety()) * weightBlockVariety;
+        double mobilityScore = normaliseMobility(puzzleStats.getMobilityScore()) * weightMobility;
+        double moveEstimateScore = normaliseMoveEstimate(puzzleStats.getMoveEstimate()) * weightMoveEstimate;
+        double winConditionScore = normaliseWinConditionScore(puzzleStats.getinConditionScore()) * weightWinCondition;
         
+        double totalScore = gridScore + blockScore + varietyScore + mobilityScore + moveEstimateScore + winConditionScore;
+        return classifyScore(totalScore);
+    }
+
+    public DifficultyLevel classifyScore(double totalScore){
+        if(totalScore < 3.0){
+            return DifficultyLevel.EASY;
+        }else if(totalScore < 5.0){
+            return DifficultyLevel.MEDIUM;
+        }else{
+            return DifficultyLevel.HARD;
+        }
     }
 
     public double normaliseGridSize(Integer gridSize){
@@ -51,4 +68,6 @@ public class DifficultyScorer{
     public double normaliseWinConditionScore(Integer winConditionScore){
         return winConditionScore; // divide by max win condition score
     }
+
+    
 }

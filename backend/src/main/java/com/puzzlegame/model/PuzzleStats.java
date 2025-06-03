@@ -37,7 +37,7 @@ public class PuzzleStats{
         return moveEstimate;
     }
 
-    public int getWinConditionScore(){
+    public int getinConditionScore(){
         return winConditionScore;
     }
 }

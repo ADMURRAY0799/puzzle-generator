@@ -20,16 +20,19 @@ public class Position {
 
     public Position move(Direction direction){
         switch (direction){
-            case UP:
+            case UP -> {
                 return new Position(this.row -1, this.col);
-            case DOWN:
+            }
+            case DOWN -> {
                 return new Position(this.row +1, this.col);
-            case LEFT:
+            }
+            case LEFT -> {
                 return new Position(this.row, this.col - 1);
-            case RIGHT:
+            }
+            case RIGHT -> {
                 return new Position(this.row, this.col + 1);
-            default:
-                throw new IllegalArgumentException("Unknown direction: " + direction);
+            }
+            default -> throw new IllegalArgumentException("Unknown direction: " + direction);
         }
     }
 
