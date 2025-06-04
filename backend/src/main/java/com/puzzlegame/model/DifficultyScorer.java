@@ -1,12 +1,12 @@
 package com.puzzlegame.model;
 
 public class DifficultyScorer{
-    private float weightGridSize;
-    private float weightBlockCount;
-    private float weightBlockVariety;
-    private float weightMobility;
-    private float weightMoveEstimate;
-    private float weightWinCondition;
+    private final float weightGridSize;
+    private final float weightBlockCount;
+    private final float weightBlockVariety;
+    private final float weightMobility;
+    private final float weightMoveEstimate;
+    private final float weightWinCondition;
 
     public enum DifficultyLevel{
         EASY, MEDIUM, HARD;
@@ -15,12 +15,12 @@ public class DifficultyScorer{
     public DifficultyScorer(float weightGridSize, float weightBlockCount, float weightBlockVariety,
             float weightMobility, float weightMoveEstimate, float weightWinCondition){
 
-            this.weightGridSize = 0.2f;
-            this.weightBlockCount = 0.3f;
-            this.weightBlockVariety = 0.4f;
-            this.weightMobility = 0.5f;
-            this.weightMoveEstimate = 1.0f;
-            this.weightWinCondition = 0.8f;
+            this.weightGridSize = weightGridSize;
+            this.weightBlockCount = weightBlockCount;
+            this.weightBlockVariety = weightBlockVariety;
+            this.weightMobility = weightMobility;
+            this.weightMoveEstimate = weightMoveEstimate;
+            this.weightWinCondition = weightWinCondition;
     }
 
     public DifficultyLevel score(PuzzleStats puzzleStats){
