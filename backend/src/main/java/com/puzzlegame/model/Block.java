@@ -1,5 +1,6 @@
 package com.puzzlegame.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Block {
@@ -8,6 +9,7 @@ public class Block {
     private Position position;
     public int length; 
     private Direction direction;
+    private Orientation orientation;
     private boolean isTarget;
 
     public Block(String id, Position position, int length, Direction direction, boolean isTarget){
@@ -19,12 +21,11 @@ public class Block {
     }
 
     public List<Position> getOccupiedPositions(){
-        if(direction == Direction.LEFT && length == 2 || direction == Direction.RIGHT && length == 2){
-            return List.of(position, new Position(position.row, position.col + 1));
-        }else if (direction == Direction.UP && length == 2 || direction == Direction.DOWN && length == 2){
-                return List.of(position, new Position(position.row + 1, position.col));
-            }
-            else return (List<Position>) position;
+        if(orientation == Orientation.HORIZONTAL){
+            return List.of(position, new Position(position.getRow(), position.getCol() + 1));
+        }else{
+            return List.of(position, new Position(position.getRow() +1, position.getCol()));
+        }
     }
 
     public boolean isTarget(){
@@ -37,60 +38,64 @@ public class Block {
 
     //Calculate future tile positions based on proposed movement
     public List<Position> getOffsetPositions(int rowDelta, int colDelta){
-        Position newStart = new Position(position.row + rowDelta, position.col + colDelta);
-        if(length == 2){
-            if(direction == Direction.LEFT){
-                Position second = new Position(newStart.row, newStart.col + 1);
-                return List.of(newStart, second);
-            }
-            if(direction == Direction.RIGHT){
-                Position second = new Position(newStart.row, newStart.col - 1);
-                return List.of(newStart, second);
-            }   
-            if(direction == Direction.UP){
-                Position second = new Position(newStart.row - 1, newStart.col);
-                return List.of(newStart, second);
-            }else {
-                Position second = new Position(newStart.row + 1, newStart.col);
-                return List.of(newStart, second);
-            }
-        }return List.of(newStart);
+        List<Position> futurePositions = new ArrayList<>();
+
+        for (Position position : getOccupiedPositions()){
+            int newRow = position.getRow() + rowDelta;
+            int newCol = position.getCol() + colDelta;
+            futurePositions.add(new Position(newRow, newCol));
+        }
+        return futurePositions;
     }
 
     // Actually perform the move by delta in allowed direction
-    public void move(int delta){
-        if(direction == Direction.LEFT || direction == Direction.RIGHT){
-            position.col+= delta;
-        }else if(direction == Direction.UP || direction == direction.DOWN){
-            position.row+= delta;
+    public boolean canMove(Direction direction, int delta, Tile[][] grid) {
+        if (!orientation.allows(direction)) {
+            return false;
         }
-    }
-
-    //Validate whether move is legal given the current grid 
-    public boolean canMove(int delta, Tile[][] grid){
-        int rowDelta = 0;
-        int colDelta = 0;
-        if(direction == Direction.LEFT || direction == Direction.RIGHT){
-             colDelta = delta;
-        }else{
-             colDelta = 0;
-        }
-        List<Position> futurePositions = getOffsetPositions(rowDelta, colDelta);
-
-        for(Position position: futurePositions){
-            int row = position.getRow();
-            int col = position.getCol();
-
-            if(row < 0 || row >= grid.length || col < 0 || col > grid.length){
+    
+        Delta d = getDelta(direction, delta);
+    
+        List<Position> futurePositions = getOffsetPositions(d.rowDelta, d.colDelta);
+    
+        for (Position pos : futurePositions) {
+            int row = pos.getRow();
+            int col = pos.getCol();
+    
+            if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
                 return false;
             }
-
+    
             Tile tile = grid[row][col];
-            if(tile == null || tile.isWalkable() == false){
+            if (tile == null || !tile.isWalkable()) {
                 return false;
             }
         }
-       return true;
+    
+        return true;
     }
-       
+
+    public void move(Direction direction, int delta) {
+        if (!orientation.allows(direction)) {
+            throw new IllegalArgumentException("Invalid move: orientation does not allow " + direction);
+        }
+    
+        Delta d = getDelta(direction, delta);
+    
+        int newRow = position.getRow() + d.rowDelta;
+        int newCol = position.getCol() + d.colDelta;
+    
+        this.position = new Position(newRow, newCol);
+    }
+
+    private Delta getDelta(Direction direction, int delta) {
+        return switch (direction) {
+            case UP -> new Delta(-delta, 0);
+            case DOWN -> new Delta(delta, 0);
+            case LEFT -> new Delta(0, -delta);
+            case RIGHT -> new Delta(0, delta);
+        };
+    }
+    
+    
 }

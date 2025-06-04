@@ -19,7 +19,7 @@ public class PuzzleGenerator{
     public Puzzle generate(DifficultyLevel difficultyLevel){
         int attempt = 0;
         PuzzleAnalyser analyser = new PuzzleAnalyser();
-        
+
         while(attempt < maxAttempts){
             Puzzle candidatePuzzle = createRandomPuzzle(difficultyLevel);
             
@@ -37,6 +37,7 @@ public class PuzzleGenerator{
     public Puzzle createRandomPuzzle(DifficultyLevel difficultyLevel){
         GridSize gridSize = getGridDimensions(difficultyLevel);
         Block Grid = initialiseEmptyGrid(gridSize, null);
+        
         Puzzle blocklist;
 
         
@@ -65,9 +66,19 @@ public class PuzzleGenerator{
         }
     }
 
-    public Block initialiseEmptyGrid(GridSize gridSize, Tile[][] grid){
-       int randomRows = random.nextInt()
+    public Tile[][] initialiseEmptyGrid(GridSize gridSize){
+       int rows = gridSize.getRows();
+       int cols = gridSize.getCols();
+       Tile [][] grid = new Tile[rows][cols];
+       for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+            grid[i][j] = new Tile(i, j, Tile.TileType.EMPTY, false);
+            }
+        }
+        return grid;
     }
+
+
 
     public Position generateRandomPosition(int rows, int cols){
         int randomRow = random.nextInt(rows);
@@ -77,18 +88,42 @@ public class PuzzleGenerator{
         return randomPosition;
     }
 
-    public Block generateRandomBlock(GridSize gridSize, Tile[][] grid){
-       Position position = generateRandomPosition(gridSize.getRows(), gridSize.getCols());
+    public Orientation generateRandomOrientation(){
+        return random.nextBoolean() ? Orientation.HORIZONTAL : Orientation.VERTICAL;
+    }
 
+    public Block generateRandomBlock(GridSize gridSize, Tile[][] grid){
+       while(true){
+        Position position = generateRandomPosition(gridSize.getRows(), gridSize.getCols());
+        Direction direction = generateRandomDirection()
+        int length = random.nextInt(1, 2);
+
+        Block block = new Block(
+            this.id = 
+        )
+       }
     }
 
     public Block generateRandomTargetBlock(GridSize gridSize, Tile[][] grid){
         Position position = generateRandomPosition(gridSize.getRows(), gridSize.getCols());
         int length = 2;
-        Block block = new Block(null, position, length, null, true);
-        return block;
+        
+        String id = generateRandomBlockID();
+
+        Block block = new Block(id, position, length, direction, true);
+
+        if(blockFitsWithoutOverlap(grid, block)){
+            return block;
+        }
     }
 
+    
+    public String generateRandomBlockID(){
+        int randomNumber = random.nextInt();
+        return "B" + randomNumber;
+    }
+
+        
     public void markBlockOccupied(Tile[][] grid, Block block){
         for(Position position : block.getOccupiedPositions()){
             int row = position.getRow();
@@ -99,6 +134,7 @@ public class PuzzleGenerator{
             tile.setType(Tile.TileType.BLOCK);
         }
     }
+    
 
     public Boolean blockFitsWithoutOverlap(Tile[][] grid, Block block){
         for (Position position : block.getOccupiedPositions()){

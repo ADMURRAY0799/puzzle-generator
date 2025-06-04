@@ -18,8 +18,6 @@ public enum Direction{
     public boolean isRight(){
         return this == RIGHT;
     }
-
-    
 }
 
 
