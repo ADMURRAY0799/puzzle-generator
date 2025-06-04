@@ -68,6 +68,4 @@ public class DifficultyScorer{
     public double normaliseWinConditionScore(Integer winConditionScore){
         return winConditionScore; // divide by max win condition score
     }
-
-    
 }

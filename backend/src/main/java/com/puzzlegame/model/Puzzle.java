@@ -51,7 +51,7 @@ public class Puzzle{
         if(block == null){
             return false;
         }
-        if(!block.canMove(delta, grid)){
+        if(!block.canMove(null, delta, grid)){
             return false;
         }
         //Clear current positions
@@ -60,7 +60,7 @@ public class Puzzle{
             grid[position.getRow()][position.getCol()].setOccupied(false);
 
             //move block 
-            block.move(delta);
+            block.move(null, delta);
         }
 
         //Update grid with new positions
@@ -81,6 +81,10 @@ public class Puzzle{
                 }
             }
         }return false;
+    }
+
+    public void add(Block targetBlock) {
+        
     }
 
  }

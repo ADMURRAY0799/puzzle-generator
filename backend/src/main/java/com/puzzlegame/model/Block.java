@@ -12,11 +12,11 @@ public class Block {
     private Orientation orientation;
     private boolean isTarget;
 
-    public Block(String id, Position position, int length, Direction direction, boolean isTarget){
+    public Block(String id, Position position, int length, Orientation orientation, boolean isTarget){
         this.id = id;
         this.position = position;
         this.length = length;
-        this.direction = direction;
+        this.orientation = orientation;
         this.isTarget = isTarget;
     }
 

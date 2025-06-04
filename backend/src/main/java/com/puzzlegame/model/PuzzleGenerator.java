@@ -1,8 +1,8 @@
 package com.puzzlegame.model;
 import com.puzzlegame.model.DifficultyScorer.DifficultyLevel;
-import com.puzzlegame.model.GridSize;
-import com.puzzlegame.model.Puzzle;
-import com.puzzlegame.model.PuzzleAnalyser;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 public class PuzzleGenerator{
     private Random random;
@@ -36,18 +36,45 @@ public class PuzzleGenerator{
 
     public Puzzle createRandomPuzzle(DifficultyLevel difficultyLevel){
         GridSize gridSize = getGridDimensions(difficultyLevel);
-        Block Grid = initialiseEmptyGrid(gridSize, null);
-        
-        Puzzle blocklist;
+        Tile[][] grid = initialiseEmptyGrid(gridSize);
+        List<Block> blocklist = new ArrayList<>();
+        int numBlocks = DifficultyConfig.getNumBlocks(difficultyLevel);
 
-        
-        
+        Block targetBlock = generateRandomTargetBlock(gridSize, grid);
+        markBlockOccupied(grid, targetBlock);
+        blocklist.add(targetBlock);
 
-        int rows = gridSize.getRows();
-        int cols = gridSize.getCols();
+        while(blocklist.size() < numBlocks){
+            Block block = generateRandomBlock(gridSize, grid);
+            markBlockOccupied(grid, block);
+            blocklist.add(block);
+        }
+        Position goalPosition = findFreeBorderTile(grid);
+        grid[goalPosition.getRow()][goalPosition.getCol()].setType(Tile.TileType.GOAL);
+        return new Puzzle(gridSize.getRows(), gridSize.getCols(), blocklist);
+    }
 
-        int grid = initialiseEmptyGrid(rows, cols);
-        Block targetBlock = generateRandomTargetBlock(gridSize, block);
+    //Helper method - find a walkable tile on the border, place goal there
+    public Position findFreeBorderTile(Tile[][] grid){
+        List<Position> candidates = new ArrayList<>();
+
+        int numRows = grid.length;
+        int numCols = grid[0].length;
+
+        for(int row = 0; row < numRows; row++){
+            for (int col = 0; col < numCols ; col++){
+                if(row == 0 || row == numRows -1 || col == 0 || col == numCols - 1){
+                    Tile tile = grid[row][col];
+                    if(tile.isWalkable()){
+                        candidates.add(new Position(row, col));
+                    }
+                }
+            }
+        }
+        if(candidates.isEmpty()){
+            throw new RuntimeException("No free border tiles found!");
+        }
+        return candidates.get(random.nextInt(candidates.size()));
     }
 
 
@@ -92,32 +119,27 @@ public class PuzzleGenerator{
         return random.nextBoolean() ? Orientation.HORIZONTAL : Orientation.VERTICAL;
     }
 
-    public Block generateRandomBlock(GridSize gridSize, Tile[][] grid){
-       while(true){
-        Position position = generateRandomPosition(gridSize.getRows(), gridSize.getCols());
-        Direction direction = generateRandomDirection()
-        int length = random.nextInt(1, 2);
-
-        Block block = new Block(
-            this.id = 
-        )
-       }
-    }
-
-    public Block generateRandomTargetBlock(GridSize gridSize, Tile[][] grid){
-        Position position = generateRandomPosition(gridSize.getRows(), gridSize.getCols());
-        int length = 2;
-        
-        String id = generateRandomBlockID();
-
-        Block block = new Block(id, position, length, direction, true);
-
-        if(blockFitsWithoutOverlap(grid, block)){
-            return block;
+    public Block generateRandomBlockInternal(GridSize gridSize, Tile[][] grid, boolean isTarget){
+        while(true){
+            Position position = generateRandomPosition(gridSize.getRows(), gridSize.getCols());
+            Orientation orientation = generateRandomOrientation();
+            String id = generateRandomBlockID();
+            int length = isTarget ? 2 : (random.nextBoolean() ? 1 : 2);
+            Block block = new Block(id, position, length, orientation, true);
+            if(blockFitsWithoutOverlap(grid, block)){
+                return block;
+            }
         }
     }
 
-    
+    public Block generateRandomBlock(GridSize gridSize, Tile[][] grid){
+        return generateRandomBlockInternal(gridSize, grid, false);
+    }
+
+    public Block generateRandomTargetBlock(GridSize gridSize, Tile[][] grid){
+        return generateRandomBlockInternal(gridSize, grid, true);
+    }
+
     public String generateRandomBlockID(){
         int randomNumber = random.nextInt();
         return "B" + randomNumber;
