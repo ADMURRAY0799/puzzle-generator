@@ -7,17 +7,15 @@ public class Puzzle{
     public int rows;
     public int cols;
     
-    public Puzzle(int rows, int cols, List<Block> blockList){
-        this.rows = rows;
-        this.cols = cols;
+    public Puzzle(Tile[][] grid, List<Block> blockList){
+        this.grid = grid;
+        this.rows = grid.length;
+        this.cols = grid[0].length;
         this.blockList = blockList;
-        this.grid = new Tile[rows][cols];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                this.grid[i][j] = new Tile(j, j, Tile.TileType.EMPTY, false);
-            }
-        }
+        
     }
+
+   
 
     public void processBlocks() {
         for (Block block : blockList) {
@@ -83,8 +81,11 @@ public class Puzzle{
         }return false;
     }
 
-    public void add(Block targetBlock) {
-        
+    public Tile[][] getGrid(){
+        return grid;
     }
 
+    public List<Block> getBlocks(){
+        return blockList;
+    }
  }

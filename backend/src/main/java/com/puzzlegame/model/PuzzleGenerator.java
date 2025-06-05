@@ -51,7 +51,7 @@ public class PuzzleGenerator{
         }
         Position goalPosition = findFreeBorderTile(grid);
         grid[goalPosition.getRow()][goalPosition.getCol()].setType(Tile.TileType.GOAL);
-        return new Puzzle(gridSize.getRows(), gridSize.getCols(), blocklist);
+        return new Puzzle(grid, blocklist);
     }
 
     //Helper method - find a walkable tile on the border, place goal there
