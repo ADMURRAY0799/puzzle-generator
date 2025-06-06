@@ -1,9 +1,9 @@
 package com.puzzlegame.model;
-import com.puzzlegame.model.DifficultyScorer.DifficultyLevel;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import com.puzzlegame.model.DifficultyScorer.DifficultyLevel;
 public class PuzzleGenerator{
     private Random random;
     private int maxAttempts;
@@ -46,8 +46,10 @@ public class PuzzleGenerator{
 
         while(blocklist.size() < numBlocks){
             Block block = generateRandomBlock(gridSize, grid);
-            markBlockOccupied(grid, block);
-            blocklist.add(block);
+            if(blockFitsWithoutOverlap(grid, block)){
+               markBlockOccupied(grid, block);
+               blocklist.add(block);
+            }
         }
         Position goalPosition = findFreeBorderTile(grid);
         grid[goalPosition.getRow()][goalPosition.getCol()].setType(Tile.TileType.GOAL);

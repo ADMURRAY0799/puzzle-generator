@@ -21,12 +21,23 @@ public class Block {
     }
 
     public List<Position> getOccupiedPositions(){
-        if(orientation == Orientation.HORIZONTAL){
-            return List.of(position, new Position(position.getRow(), position.getCol() + 1));
-        }else{
-            return List.of(position, new Position(position.getRow() +1, position.getCol()));
+        List<Position> positions = new ArrayList<>();
+
+        if(position == null || orientation == null){
+            return positions;
         }
-    }
+        positions.add(position);
+
+        if(length == 2){
+            if(orientation == Orientation.HORIZONTAL){
+                positions.add(new Position(position.getRow(), position.getCol() + 1));
+            }else if(orientation == Orientation.VERTICAL){
+                positions.add(new Position(position.getRow() + 1 , position.getCol()));
+            }else{
+                throw new IllegalStateException("Unknown Orientation " + orientation);
+                }
+            } return positions;
+        }
 
     public boolean isTarget(){
         return isTarget;
